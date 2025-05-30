@@ -1,0 +1,25 @@
+import socket
+import time
+
+TARGET_IP = "zeek-mc.sytes.net"
+TARGET_PORT = 25508
+MESSAGE = b"PingCheckUDP" # Mensaje arbitrario
+NUM_PACKETS = 5          # Número de paquetes a enviar (MUY BAJO)
+DELAY_SECONDS = 0.2      # Pausa entre paquetes en segundos (200ms)
+
+print(f"Enviando {NUM_PACKETS} paquetes UDP a {TARGET_IP}:{TARGET_PORT}...")
+
+try:
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
+    for i in range(NUM_PACKETS):
+        sock.sendto(MESSAGE, (TARGET_IP, TARGET_PORT))
+        print(f"Paquete {i+1}/{NUM_PACKETS} enviado.")
+        time.sleep(DELAY_SECONDS)
+    print("Envío de paquetes completado.")
+except socket.gaierror:
+    print(f"Error: No se pudo resolver el nombre de host '{TARGET_IP}'. Verifica la dirección.")
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    if 'sock' in locals():
+        sock.close()
